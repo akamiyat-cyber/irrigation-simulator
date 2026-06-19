@@ -15,9 +15,9 @@ const INITIAL_PARAMS: SimulationParams = {
   doesPumpOwnerPayFee: false,
   pumpOwnerFee: 1800,
   areaUnit: 'bigha',
-  electricityInputMode: 'total',
   electricity: 15000,
-  electricityRatio: 40,
+  laborCost: 5000,
+  otherCost: 2000,
   waterReductionRate: 20,
   returnRate: 50,
 };
@@ -139,16 +139,12 @@ function App() {
                       <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Sum of (Farmer's Area × Fee) + (Owner's Area × Owner's Fee)</code>
                     </li>
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                      <span className="font-medium text-slate-700 min-w-[220px]">Total Electricity bill</span>
-                      {params.electricityInputMode === 'ratio' ? (
-                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Collected Fees × ({params.electricityRatio}%)</code>
-                      ) : (
-                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= User Input</code>
-                      )}
+                      <span className="font-medium text-slate-700 min-w-[220px]">Total Expenses</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Electricity + Labor Cost + Other Cost</code>
                     </li>
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                      <span className="font-medium text-slate-700 min-w-[220px]">New Total Electricity Cost</span>
-                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Electricity bill × (1 - Water Reduction Rate / 100)</code>
+                      <span className="font-medium text-slate-700 min-w-[220px]">New Total Expenses</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= {`{Electricity × (1 - Water Reduction Rate / 100)}`} + Labor Cost + Other Cost</code>
                     </li>
                   </ul>
                 </div>
@@ -171,7 +167,7 @@ function App() {
                     <li className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
                       <span className="block font-bold text-indigo-800 mb-2">⚙️ Pump Business Profit</span>
                       <code className="bg-white border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
-                        = {`{ Total Collected Fees × (1 - Return Rate / 100) }`} - New Total Electricity Cost
+                        = {`{ Total Collected Fees × (1 - Return Rate / 100) }`} - New Total Expenses
                       </code>
                     </li>
                   </ul>
@@ -192,20 +188,20 @@ function App() {
                       <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Fee × Sum of all Farmers' areas</code>
                     </li>
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                      <span className="font-medium text-slate-700 min-w-[220px]">Total Electricity bill</span>
-                      {params.electricityInputMode === 'ratio' ? (
-                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Fee from all Farmers × ({params.electricityRatio}%)</code>
-                      ) : (
-                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= User Input</code>
-                      )}
+                      <span className="font-medium text-slate-700 min-w-[220px]">Total Expenses</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Electricity + Labor Cost + Other Cost</code>
                     </li>
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                      <span className="font-medium text-slate-700 min-w-[220px]">Farmers' Electricity Share</span>
-                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Electricity bill × (Sum of all Farmers' areas / Total Area)</code>
+                      <span className="font-medium text-slate-700 min-w-[220px]">Farmers' Expenses Share</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Expenses × (Sum of all Farmers' areas / Total Area)</code>
                     </li>
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                      <span className="font-medium text-slate-700 min-w-[220px]">New Electricity Cost (Farmers' Share)</span>
-                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Farmers' Electricity Share × (1 - Water Reduction Rate / 100)</code>
+                      <span className="font-medium text-slate-700 min-w-[220px]">New Total Expenses</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= {`{Electricity × (1 - Water Reduction Rate / 100)}`} + Labor Cost + Other Cost</code>
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">New Expenses (Farmers' Share)</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= New Total Expenses × (Sum of all Farmers' areas / Total Area)</code>
                     </li>
                   </ul>
                 </div>
@@ -222,7 +218,7 @@ function App() {
                     <li className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
                       <span className="block font-bold text-indigo-800 mb-2">⚙️ Pump Owner's Profit</span>
                       <code className="bg-white border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
-                        = {`{ Total Fee from all Farmers × (1 - Return Rate / 100) }`} - New Electricity Cost (Farmers' Share)
+                        = {`{ Total Fee from all Farmers × (1 - Return Rate / 100) }`} - New Expenses (Farmers' Share)
                       </code>
                     </li>
                   </ul>

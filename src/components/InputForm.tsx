@@ -71,10 +71,7 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
     onChange('farmers', updated);
   };
 
-  // Calculate estimated electricity for display
-  const totalFarmerArea = params.farmers.reduce((sum, f) => sum + (Number(f.area) || 0), 0);
-  const totalCollectedFees = (Number(params.fee) || 0) * totalFarmerArea + (params.doesPumpOwnerPayFee ? (Number(params.pumpOwnerFee) || 0) * (Number(params.pumpOwnerArea) || 0) : 0);
-  const estimatedElectricity = totalCollectedFees * ((Number(params.electricityRatio) || 0) / 100);
+  // Component implementation
 
   return (
     <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl p-6 border border-slate-100/50">
@@ -203,57 +200,47 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
           </div>
         </div>
 
-        <div className="space-y-2 pt-2 border-t border-slate-100">
-          <div className="flex justify-between items-center mb-1">
-            <label className="block text-sm font-medium text-slate-600">
-              Electricity Bill Input Mode
-            </label>
-            <div className="flex bg-slate-200 rounded-lg p-1">
-              <button
-                onClick={() => onChange('electricityInputMode', 'total')}
-                className={`px-3 py-1 text-xs rounded-md transition-colors ${params.electricityInputMode === 'total' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                Total Amount
-              </button>
-              <button
-                onClick={() => onChange('electricityInputMode', 'ratio')}
-                className={`px-3 py-1 text-xs rounded-md transition-colors ${params.electricityInputMode === 'ratio' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                Ratio (%)
-              </button>
-            </div>
+        <div className="space-y-4 pt-4 border-t border-slate-100">
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="text-sm font-bold text-slate-700">Pump Business Expenses (Taka/season)</h3>
+            <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">Total Cost: {(Number(params.electricity) || 0) + (Number(params.laborCost) || 0) + (Number(params.otherCost) || 0)}</span>
           </div>
 
-          {params.electricityInputMode === 'total' ? (
-            <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1 relative">
+              <label className="block text-xs font-medium text-slate-600">Electricity Bill</label>
               <input
                 type="number"
                 name="electricity"
                 value={params.electricity}
                 onChange={handleChange}
-                placeholder="Total Electricity bill"
-                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                placeholder="0"
+                className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none text-sm"
               />
-              <span className="absolute right-3 top-2 text-xs text-slate-400 pointer-events-none">taka/season</span>
             </div>
-          ) : (
-            <div className="space-y-1">
-              <div className="relative">
-                <input
-                  type="number"
-                  name="electricityRatio"
-                  value={params.electricityRatio}
-                  onChange={handleChange}
-                  placeholder="Electricity Cost Ratio (%)"
-                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-                />
-                <span className="absolute right-3 top-2 text-xs text-slate-400 pointer-events-none">%</span>
-              </div>
-              <p className="text-xs text-slate-500 ml-1">
-                ※ Estimated total electricity: <span className="font-bold text-slate-700">{Math.round(estimatedElectricity).toLocaleString()} Taka</span>
-              </p>
+            <div className="space-y-1 relative">
+              <label className="block text-xs font-medium text-slate-600">Labor Cost</label>
+              <input
+                type="number"
+                name="laborCost"
+                value={params.laborCost}
+                onChange={handleChange}
+                placeholder="0"
+                className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none text-sm"
+              />
             </div>
-          )}
+            <div className="space-y-1 relative">
+              <label className="block text-xs font-medium text-slate-600">Other Costs</label>
+              <input
+                type="number"
+                name="otherCost"
+                value={params.otherCost}
+                onChange={handleChange}
+                placeholder="0"
+                className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none text-sm"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="space-y-1">

@@ -35,18 +35,18 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
     const totalFeeFromFarmers = fee * totalFarmerArea;
     const totalCollectedFees = totalFeeFromFarmers + (doesOwnerPay ? ownerFee * pumpOwnerArea : 0);
 
-    // Calculate electricity based on input mode
-    let electricity = 0;
-    if (params.electricityInputMode === 'ratio') {
-      const ratio = Number(params.electricityRatio) || 0;
-      electricity = totalCollectedFees * (ratio / 100);
-    } else {
-      electricity = Number(params.electricity) || 0;
-    }
+    // Calculate base expenses
+    const electricity = Number(params.electricity) || 0;
+    const laborCost = Number(params.laborCost) || 0;
+    const otherCost = Number(params.otherCost) || 0;
     
     // Electricity costs to subtract
     const newTotalElectricityCost = electricity * (1 - waterReductionRate / 100);
     const newFarmerElectricityCost = (electricity * farmerShareRatio) * (1 - waterReductionRate / 100);
+
+    // Total expenses
+    const totalExpenses = newTotalElectricityCost + laborCost + otherCost;
+    const farmerShareExpenses = newFarmerElectricityCost + ((laborCost + otherCost) * farmerShareRatio);
 
     for (let r = 0; r <= 100; r += 1) {
       const point: any = { returnRate: r };
@@ -65,13 +65,13 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
         const ownerFarmerProfit = ownerFeeAmount * (r / 100);
         point.ownerFarmerProfit = Math.round(ownerFarmerProfit);
 
-        // Pump Business Profit: Total collected from EVERYONE minus the FULL electricity bill
-        const pumpBusinessProfit = totalCollectedFees * (1 - (r / 100)) - newTotalElectricityCost;
+        // Pump Business Profit: Total collected from EVERYONE minus the FULL expenses
+        const pumpBusinessProfit = totalCollectedFees * (1 - (r / 100)) - totalExpenses;
         point.pumpBusinessProfit = Math.round(pumpBusinessProfit);
         
       } else {
         // Old logic: Pump owner doesn't pay, we isolate the farmer's portion of the business
-        const pumpOwnerProfit = totalFeeFromFarmers * (1 - (r / 100)) - newFarmerElectricityCost;
+        const pumpOwnerProfit = totalFeeFromFarmers * (1 - (r / 100)) - farmerShareExpenses;
         point.pumpBusinessProfit = Math.round(pumpOwnerProfit);
       }
 
