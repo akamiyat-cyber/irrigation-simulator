@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/irrigation-simulator/dev-sw.js?dev-sw', { scope: '/irrigation-simulator/', type: 'classic' })
