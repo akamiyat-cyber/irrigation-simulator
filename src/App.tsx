@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  PlusCircle, Trash2, Droplets, Zap, PiggyBank, ChevronDown, ChevronUp,
+  PlusCircle, Trash2, Droplets, Zap, PiggyBank,
   ArrowRight, TrendingUp, SlidersHorizontal, Users
 } from 'lucide-react';
 import {
@@ -408,7 +408,6 @@ interface SimpleViewProps {
 }
 
 const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
   const base = useMemo(() => getBaseCalc(params), [params]);
   const r = Number(params.returnRate) || 0;
   const currentPoint = useMemo(() => getPointAt(base, params, r), [base, params, r]);
@@ -459,17 +458,7 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
           </div>
         </div>
 
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="mt-4 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-          {showAdvanced ? t.advancedToggleHide : t.advancedToggleShow}
-          {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-
-        {showAdvanced && (
-          <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
+        <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">{t.electricity}</label>
@@ -501,7 +490,6 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
               </div>
             )}
           </div>
-        )}
       </div>
 
       {/* Step 1 */}
@@ -961,19 +949,18 @@ export default function App() {
 
   const [params, setParams] = useState<SimulationParams>({
     fee: 2000,
-    pumpOwnerArea: 20,
-    waterReductionRate: 30,
-    doesPumpOwnerPayFee: true,
+    pumpOwnerArea: 14,
+    waterReductionRate: 15,
+    doesPumpOwnerPayFee: false,
     pumpOwnerFee: 1800,
-    returnRate: 20,
+    returnRate: 5,
     areaUnit: 'bigha',
-    electricity: 50000,
-    laborCost: 10000,
-    otherCost: 5000,
+    electricity: 15000,
+    laborCost: 5000,
+    otherCost: 2000,
     farmers: [
-      { id: '1', name: 'Farmer 1', area: 10 },
-      { id: '2', name: 'Farmer 2', area: 15 },
-      { id: '3', name: 'Farmer 3', area: 8 },
+      { id: '1', name: 'Farmer 1', area: 15 },
+      { id: '2', name: 'Farmer 2', area: 16 },
     ],
   });
 
