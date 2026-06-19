@@ -74,6 +74,14 @@ function App() {
                       <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Sum of (Farmer's Area × Fee) + (Owner's Area × Owner's Fee)</code>
                     </li>
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">Total Electricity bill</span>
+                      {params.electricityInputMode === 'ratio' ? (
+                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Collected Fees × ({params.electricityRatio}%)</code>
+                      ) : (
+                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= User Input</code>
+                      )}
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
                       <span className="font-medium text-slate-700 min-w-[220px]">New Total Electricity Cost</span>
                       <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Electricity bill × (1 - Water Reduction Rate / 100)</code>
                     </li>
@@ -117,6 +125,14 @@ function App() {
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
                       <span className="font-medium text-slate-700 min-w-[220px]">Total Fee from all Farmers</span>
                       <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Fee × Sum of all Farmers' areas</code>
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">Total Electricity bill</span>
+                      {params.electricityInputMode === 'ratio' ? (
+                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Fee from all Farmers × ({params.electricityRatio}%)</code>
+                      ) : (
+                        <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= User Input</code>
+                      )}
                     </li>
                     <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
                       <span className="font-medium text-slate-700 min-w-[220px]">Farmers' Electricity Share</span>

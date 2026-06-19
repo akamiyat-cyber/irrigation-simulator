@@ -24,7 +24,6 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
     
     const fee = Number(params.fee) || 0;
     const pumpOwnerArea = Number(params.pumpOwnerArea) || 0;
-    const electricity = Number(params.electricity) || 0;
     const waterReductionRate = Number(params.waterReductionRate) || 0;
     const doesOwnerPay = params.doesPumpOwnerPayFee;
     const ownerFee = doesOwnerPay ? (Number(params.pumpOwnerFee) || 0) : 0;
@@ -34,6 +33,16 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
     const farmerShareRatio = totalArea > 0 ? totalFarmerArea / totalArea : 0;
 
     const totalFeeFromFarmers = fee * totalFarmerArea;
+    const totalCollectedFees = totalFeeFromFarmers + (doesOwnerPay ? ownerFee * pumpOwnerArea : 0);
+
+    // Calculate electricity based on input mode
+    let electricity = 0;
+    if (params.electricityInputMode === 'ratio') {
+      const ratio = Number(params.electricityRatio) || 0;
+      electricity = totalCollectedFees * (ratio / 100);
+    } else {
+      electricity = Number(params.electricity) || 0;
+    }
     
     // Electricity costs to subtract
     const newTotalElectricityCost = electricity * (1 - waterReductionRate / 100);
@@ -57,7 +66,6 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
         point.ownerFarmerProfit = Math.round(ownerFarmerProfit);
 
         // Pump Business Profit: Total collected from EVERYONE minus the FULL electricity bill
-        const totalCollectedFees = totalFeeFromFarmers + ownerFeeAmount;
         const pumpBusinessProfit = totalCollectedFees * (1 - (r / 100)) - newTotalElectricityCost;
         point.pumpBusinessProfit = Math.round(pumpBusinessProfit);
         

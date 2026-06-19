@@ -11,7 +11,9 @@ export interface SimulationParams {
   doesPumpOwnerPayFee: boolean;
   pumpOwnerFee: number | string;
   areaUnit: 'bigha' | 'ha';
+  electricityInputMode: 'total' | 'ratio';
   electricity: number | string;
+  electricityRatio: number | string;
   waterReductionRate: number | string;
   returnRate: number;
 }
