@@ -66,6 +66,17 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
     const maxDiscountAmount = fee * (maxReturnRate / 100);
     const currentDiscountAmount = fee * ((Number(params.returnRate) || 0) / 100);
 
+    // Calculate current revenue and expenses for the dashboard
+    let currentRevenue = 0;
+    let currentExpenses = 0;
+    if (doesOwnerPay) {
+      currentRevenue = totalCollectedFees * (1 - ((Number(params.returnRate) || 0) / 100));
+      currentExpenses = totalExpenses;
+    } else {
+      currentRevenue = totalFeeFromFarmers * (1 - ((Number(params.returnRate) || 0) / 100));
+      currentExpenses = farmerShareExpenses;
+    }
+
     for (let r = 0; r <= 100; r += 1) {
       const point: any = { returnRate: r };
       
@@ -175,6 +186,26 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
           <p className="text-xs text-slate-500 mt-1">
             New Fee: <span className="font-semibold text-slate-700">{Math.round(fee - currentDiscountAmount).toLocaleString()}</span> Taka
           </p>
+        </div>
+        <div className="hidden md:block w-px h-16 bg-blue-200"></div>
+        <div className="text-sm text-center md:text-left flex-1">
+          <p className="text-slate-600 mb-1 font-medium">
+            Pump Business (at {params.returnRate}%):
+          </p>
+          <div className="flex flex-col gap-0.5 text-xs max-w-[200px] mx-auto md:mx-0">
+            <div className="flex justify-between">
+              <span className="text-slate-500">Revenue:</span>
+              <span className="font-semibold text-slate-700">{Math.round(currentRevenue).toLocaleString()} Taka</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Expenses:</span>
+              <span className="font-semibold text-slate-700">-{Math.round(currentExpenses).toLocaleString()} Taka</span>
+            </div>
+            <div className="flex justify-between border-t border-blue-200 mt-1 pt-1">
+              <span className="font-bold text-slate-700">Net Profit:</span>
+              <span className="font-bold text-indigo-700">{Math.round(currentData.pumpBusinessProfit as number).toLocaleString()} Taka</span>
+            </div>
+          </div>
         </div>
         <div className="hidden md:block w-px h-16 bg-blue-200"></div>
         <div className="text-sm text-center md:text-left flex-1">
