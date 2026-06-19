@@ -48,6 +48,24 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
     const totalExpenses = newTotalElectricityCost + laborCost + otherCost;
     const farmerShareExpenses = newFarmerElectricityCost + ((laborCost + otherCost) * farmerShareRatio);
 
+    // Calculate Baseline and Break-even points
+    let baselinePumpBusinessProfit = 0;
+    let savings = 0;
+    let maxReturnRate = 0;
+
+    if (doesOwnerPay) {
+      baselinePumpBusinessProfit = totalCollectedFees - (electricity + laborCost + otherCost);
+      savings = electricity - newTotalElectricityCost;
+      maxReturnRate = totalCollectedFees > 0 ? (savings / totalCollectedFees) * 100 : 0;
+    } else {
+      const originalFarmerShareExpenses = (electricity + laborCost + otherCost) * farmerShareRatio;
+      baselinePumpBusinessProfit = totalFeeFromFarmers - originalFarmerShareExpenses;
+      savings = (electricity * farmerShareRatio) - newFarmerElectricityCost;
+      maxReturnRate = totalFeeFromFarmers > 0 ? (savings / totalFeeFromFarmers) * 100 : 0;
+    }
+    const maxDiscountAmount = fee * (maxReturnRate / 100);
+    const currentDiscountAmount = fee * ((Number(params.returnRate) || 0) / 100);
+
     for (let r = 0; r <= 100; r += 1) {
       const point: any = { returnRate: r };
       
@@ -145,6 +163,34 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
         </div>
       </div>
 
+      {/* Win-Win Dashboard */}
+      <div className="bg-gradient-to-r from-blue-50 to-emerald-50 rounded-xl p-4 mb-6 border border-blue-100 flex flex-col md:flex-row gap-4 justify-between items-center print:break-inside-avoid shadow-sm">
+        <div className="text-sm text-center md:text-left flex-1">
+          <p className="text-slate-600 mb-1 font-medium">
+            Current Farmer Discount (at {params.returnRate}%):
+          </p>
+          <p className="font-bold text-blue-700 text-2xl">
+            {Math.round(currentDiscountAmount).toLocaleString()} <span className="text-sm font-normal">Taka/{params.areaUnit}</span>
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            New Fee: <span className="font-semibold text-slate-700">{Math.round(fee - currentDiscountAmount).toLocaleString()}</span> Taka
+          </p>
+        </div>
+        <div className="hidden md:block w-px h-16 bg-blue-200"></div>
+        <div className="text-sm text-center md:text-left flex-1">
+          <p className="text-slate-600 mb-1 font-medium flex items-center justify-center md:justify-start gap-1">
+            <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Max Win-Win Discount (Owner keeps baseline profit):
+          </p>
+          <p className="font-bold text-emerald-700 text-2xl">
+            {Math.round(maxDiscountAmount).toLocaleString()} <span className="text-sm font-normal">Taka/{params.areaUnit}</span>
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            Max Return Rate: <span className="font-semibold text-slate-700">{Math.max(0, (Math.floor(maxReturnRate * 10) / 10))}%</span>
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 max-h-48 overflow-y-auto pr-2 custom-scrollbar print:max-h-none print:overflow-visible">
         {params.farmers.map((farmer, idx) => {
           const color = FARMER_COLORS[idx % FARMER_COLORS.length];
@@ -197,15 +243,15 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
             
             <ReferenceLine 
               x={params.returnRate} 
-              stroke="#cbd5e1" 
-              strokeDasharray="3 3" 
-              label={{ position: 'top', value: 'Current Setting', fill: '#94a3b8', fontSize: 12 }} 
+              stroke="#6366f1" 
+              strokeDasharray="4 4" 
+              label={{ position: 'top', value: 'Current Setting', fill: '#6366f1', fontSize: 12, fontWeight: 'bold' }} 
             />
             <ReferenceLine 
-              y={0} 
-              stroke="#f43f5e" 
+              y={baselinePumpBusinessProfit} 
+              stroke="#ef4444" 
               strokeDasharray="3 3" 
-              label={{ position: 'insideTopLeft', value: 'Break-even Point (Profit = 0)', fill: '#f43f5e', fontSize: 12 }} 
+              label={{ position: 'insideTopLeft', value: 'Baseline Owner Profit', fill: '#ef4444', fontSize: 12 }} 
             />
 
             {params.farmers.map((farmer, idx) => (

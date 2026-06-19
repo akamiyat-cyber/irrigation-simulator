@@ -103,15 +103,27 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
 
         <div className="space-y-1">
           <label className="block text-sm font-medium text-slate-600">
-            Irrigation water fee paid by farmer <span className="text-slate-400 font-normal">(taka/{params.areaUnit}/season)</span>
+            Irrigation water fee paid by farmer <span className="text-slate-400 font-normal">(taka/season/{params.areaUnit})</span>
           </label>
-          <input
-            type="number"
-            name="fee"
-            value={params.fee}
-            onChange={handleChange}
-            className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-          />
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              name="fee"
+              value={params.fee}
+              onChange={handleChange}
+              className="w-1/3 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+            />
+            <input
+              type="range"
+              name="fee"
+              min="0"
+              max="5000"
+              step="50"
+              value={params.fee}
+              onChange={handleChange}
+              className="w-2/3 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+          </div>
         </div>
 
         <div className="pt-4 pb-2 border-t border-b border-slate-100">
@@ -244,15 +256,21 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
         </div>
 
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-600">
-            Irrigation water reduction rate <span className="text-slate-400 font-normal">(%)</span>
-          </label>
+          <div className="flex justify-between items-center">
+            <label className="block text-sm font-medium text-slate-600">
+              Irrigation water reduction rate <span className="text-slate-400 font-normal">(%)</span>
+            </label>
+            <span className="text-sm font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">{params.waterReductionRate}%</span>
+          </div>
           <input
-            type="number"
+            type="range"
             name="waterReductionRate"
+            min="0"
+            max="100"
+            step="1"
             value={params.waterReductionRate}
             onChange={handleChange}
-            className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mt-2"
           />
         </div>
 
