@@ -82,7 +82,7 @@ function App() {
                 <span className="bg-blue-200 text-blue-700 px-3 py-1 rounded-lg text-sm">Scenario A</span>
               </h2>
               <div className="grid grid-cols-1 gap-6">
-                <div className="print:hidden">
+                <div>
                   <InputForm params={params} onChange={handleParamChange} />
                 </div>
                 <div className="print:w-full print:block">
@@ -97,7 +97,7 @@ function App() {
                 <span className="bg-emerald-200 text-emerald-700 px-3 py-1 rounded-lg text-sm">Scenario B</span>
               </h2>
               <div className="grid grid-cols-1 gap-6">
-                <div className="print:hidden">
+                <div>
                   <InputForm params={paramsB} onChange={handleParamChangeB} />
                 </div>
                 <div className="print:w-full print:block">
@@ -108,7 +108,7 @@ function App() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-12 print:mb-4 print:block max-w-6xl mx-auto">
-            <div className="lg:col-span-4 print:hidden">
+            <div className="lg:col-span-4">
               <InputForm params={params} onChange={handleParamChange} />
             </div>
             <div className="lg:col-span-8 print:w-full print:block">
@@ -119,7 +119,7 @@ function App() {
 
         {/* Calculation Formulas Section */}
         {!isCompareMode && (
-        <div className="bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/60 shadow-sm max-w-4xl mx-auto print:hidden">
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/60 shadow-sm max-w-4xl mx-auto">
           <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
             <span className="bg-indigo-100 text-indigo-600 p-2 rounded-lg">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
