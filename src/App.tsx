@@ -28,15 +28,15 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 print:bg-white relative overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-br from-blue-500/10 via-emerald-500/10 to-transparent -z-10 pointer-events-none" />
-      <div className="absolute top-[-100px] right-[-100px] w-96 h-96 bg-blue-400/20 rounded-full blur-3xl -z-10 pointer-events-none" />
-      <div className="absolute bottom-[-100px] left-[-100px] w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-br from-blue-500/10 via-emerald-500/10 to-transparent -z-10 pointer-events-none print:hidden" />
+      <div className="absolute top-[-100px] right-[-100px] w-96 h-96 bg-blue-400/20 rounded-full blur-3xl -z-10 pointer-events-none print:hidden" />
+      <div className="absolute bottom-[-100px] left-[-100px] w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl -z-10 pointer-events-none print:hidden" />
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-600 mb-4 tracking-tight">
+      <div className="max-w-6xl mx-auto px-4 py-12 print:py-4 print:max-w-none">
+        <header className="mb-12 print:mb-6 text-center">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-600 print:text-black mb-4 tracking-tight">
             Irrigation Water Reduction Simulator
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
@@ -44,17 +44,17 @@ function App() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-12">
-          <div className="lg:col-span-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-12 print:mb-4 print:block">
+          <div className="lg:col-span-4 print:hidden">
             <InputForm params={params} onChange={handleParamChange} />
           </div>
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 print:w-full print:block">
             <SimulationChart params={params} />
           </div>
         </div>
 
         {/* Calculation Formulas Section */}
-        <div className="bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/60 shadow-sm max-w-4xl mx-auto">
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/60 shadow-sm max-w-4xl mx-auto print:hidden">
           <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
             <span className="bg-indigo-100 text-indigo-600 p-2 rounded-lg">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
