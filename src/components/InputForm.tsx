@@ -101,17 +101,20 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
           </div>
         </div>
 
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-600">
-            Irrigation water fee paid by farmer <span className="text-slate-400 font-normal">(taka/season/{params.areaUnit})</span>
-          </label>
-          <div className="flex items-center gap-3">
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <label className="block text-sm font-medium text-slate-600">
+              Irrigation water fee paid by farmer <span className="text-slate-400 font-normal">(taka/season/{params.areaUnit})</span>
+            </label>
+            <span className="text-sm font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">{params.fee}</span>
+          </div>
+          <div className="flex flex-col gap-3">
             <input
               type="number"
               name="fee"
               value={params.fee}
               onChange={handleChange}
-              className="w-1/3 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
             />
             <input
               type="range"
@@ -121,7 +124,7 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
               step="50"
               value={params.fee}
               onChange={handleChange}
-              className="w-2/3 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
             />
           </div>
         </div>
