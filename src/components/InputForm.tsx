@@ -24,15 +24,18 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
     
     let newPumpOwnerArea = Number(params.pumpOwnerArea) || 0;
     let newFee = Number(params.fee) || 0;
+    let newPumpOwnerFee = Number(params.pumpOwnerFee) || 0;
     let newFarmers = [...params.farmers];
 
     if (newUnit === 'ha') {
       newPumpOwnerArea = newPumpOwnerArea * bighaToHa;
       newFee = newFee / bighaToHa;
+      newPumpOwnerFee = newPumpOwnerFee / bighaToHa;
       newFarmers = newFarmers.map(f => ({ ...f, area: Number(((Number(f.area) || 0) * bighaToHa).toFixed(3)) }));
     } else {
       newPumpOwnerArea = newPumpOwnerArea / bighaToHa;
       newFee = newFee * bighaToHa;
+      newPumpOwnerFee = newPumpOwnerFee * bighaToHa;
       newFarmers = newFarmers.map(f => ({ ...f, area: Number(((Number(f.area) || 0) / bighaToHa).toFixed(3)) }));
     }
 
@@ -40,6 +43,7 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
       farmers: newFarmers,
       pumpOwnerArea: Number(newPumpOwnerArea.toFixed(3)),
       fee: Math.round(newFee),
+      pumpOwnerFee: Math.round(newPumpOwnerFee),
       areaUnit: newUnit
     });
   };
@@ -156,17 +160,42 @@ export const InputForm: React.FC<InputFormProps> = ({ params, onChange }) => {
           </div>
         </div>
 
-        <div className="space-y-1 pt-2">
-          <label className="block text-sm font-medium text-slate-600">
-            Pump Owner's area <span className="text-slate-400 font-normal">({params.areaUnit})</span>
-          </label>
-          <input
-            type="number"
-            name="pumpOwnerArea"
-            value={params.pumpOwnerArea}
-            onChange={handleChange}
-            className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-          />
+        <div className="flex space-x-4 pt-2">
+          <div className="space-y-1 w-1/2">
+            <label className="block text-sm font-medium text-slate-600">
+              Pump Owner's area <span className="text-slate-400 font-normal">({params.areaUnit})</span>
+            </label>
+            <input
+              type="number"
+              name="pumpOwnerArea"
+              value={params.pumpOwnerArea}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+            />
+          </div>
+          <div className="space-y-1 w-1/2 flex flex-col justify-end">
+            <label className="flex items-center space-x-2 text-sm font-medium text-slate-600 cursor-pointer pb-2">
+              <input 
+                type="checkbox" 
+                checked={params.doesPumpOwnerPayFee} 
+                onChange={(e) => onChange('doesPumpOwnerPayFee', e.target.checked)}
+                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              />
+              <span>Owner pays fee too?</span>
+            </label>
+            {params.doesPumpOwnerPayFee && (
+              <div className="relative">
+                <input
+                  type="number"
+                  name="pumpOwnerFee"
+                  value={params.pumpOwnerFee}
+                  onChange={handleChange}
+                  placeholder={`Fee`}
+                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="space-y-1">

@@ -11,6 +11,8 @@ function App() {
       { id: '2', name: 'Farmer B', area: 5 }
     ],
     pumpOwnerArea: 2,
+    doesPumpOwnerPayFee: false,
+    pumpOwnerFee: 1500,
     areaUnit: 'bigha',
     electricity: 15000,
     waterReductionRate: 20,
@@ -61,47 +63,91 @@ function App() {
           </h3>
           
           <div className="space-y-8 text-slate-600">
-            <div>
-              <h4 className="font-semibold text-slate-800 mb-3 text-lg border-b border-slate-200 pb-2">1. Base Variables</h4>
-              <ul className="space-y-3 ml-2">
-                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                  <span className="font-medium text-slate-700 min-w-[220px]">Total Area</span>
-                  <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Sum of all Farmers' areas + Pump Owner's area</code>
-                </li>
-                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                  <span className="font-medium text-slate-700 min-w-[220px]">Total Fee from all Farmers</span>
-                  <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Fee × Sum of all Farmers' areas</code>
-                </li>
-                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                  <span className="font-medium text-slate-700 min-w-[220px]">Farmers' Electricity Share</span>
-                  <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Electricity bill × (Sum of all Farmers' areas / Total Area)</code>
-                </li>
-                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                  <span className="font-medium text-slate-700 min-w-[220px]">New Electricity Cost (Farmers' Share)</span>
-                  <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Farmers' Electricity Share × (1 - Water Reduction Rate / 100)</code>
-                </li>
-              </ul>
-            </div>
+            {params.doesPumpOwnerPayFee ? (
+              // Logic when owner pays fee
+              <>
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-3 text-lg border-b border-slate-200 pb-2">1. Base Variables (Owner Pays Fee)</h4>
+                  <ul className="space-y-3 ml-2">
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">Total Collected Fees</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Sum of (Farmer's Area × Fee) + (Owner's Area × Owner's Fee)</code>
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">New Total Electricity Cost</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Electricity bill × (1 - Water Reduction Rate / 100)</code>
+                    </li>
+                  </ul>
+                </div>
 
-            <div>
-              <h4 className="font-semibold text-slate-800 mb-3 text-lg border-b border-slate-200 pb-2">2. Profit Calculations</h4>
-              <ul className="space-y-4 ml-2">
-                <li className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
-                  <span className="block font-bold text-emerald-800 mb-2">🧑‍🌾 Individual Farmer's Profit</span>
-                  <code className="bg-white border border-emerald-200 text-emerald-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
-                    = (Fee × Individual Farmer's area) × (Return Rate / 100)
-                  </code>
-                  <p className="text-sm text-emerald-600 mt-2">Each farmer receives a discount on their individual water fee equivalent to the Return Rate.</p>
-                </li>
-                <li className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                  <span className="block font-bold text-indigo-800 mb-2">⚙️ Pump Owner's Profit</span>
-                  <code className="bg-white border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
-                    = {`{ Total Fee from all Farmers × (1 - Return Rate / 100) }`} - New Electricity Cost (Farmers' Share)
-                  </code>
-                  <p className="text-sm text-indigo-600 mt-2">The pump owner's profit is the remaining fee collected from all farmers after their individual discounts, minus the new reduced electricity cost for the farmers' total portion.</p>
-                </li>
-              </ul>
-            </div>
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-3 text-lg border-b border-slate-200 pb-2">2. Profit Calculations</h4>
+                  <ul className="space-y-4 ml-2">
+                    <li className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                      <span className="block font-bold text-emerald-800 mb-2">🧑‍🌾 Farmer's Profit (Discount)</span>
+                      <code className="bg-white border border-emerald-200 text-emerald-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
+                        = (Fee × Individual Area) × (Return Rate / 100)
+                      </code>
+                    </li>
+                    <li className="bg-slate-100 p-4 rounded-xl border border-slate-200">
+                      <span className="block font-bold text-slate-700 mb-2">👤 Owner's Farmer Discount</span>
+                      <code className="bg-white border border-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
+                        = (Owner's Fee × Owner's Area) × (Return Rate / 100)
+                      </code>
+                    </li>
+                    <li className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                      <span className="block font-bold text-indigo-800 mb-2">⚙️ Pump Business Profit</span>
+                      <code className="bg-white border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
+                        = {`{ Total Collected Fees × (1 - Return Rate / 100) }`} - New Total Electricity Cost
+                      </code>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              // Old logic when owner does not pay fee
+              <>
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-3 text-lg border-b border-slate-200 pb-2">1. Base Variables</h4>
+                  <ul className="space-y-3 ml-2">
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">Total Area</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Sum of all Farmers' areas + Pump Owner's area</code>
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">Total Fee from all Farmers</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Fee × Sum of all Farmers' areas</code>
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">Farmers' Electricity Share</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Total Electricity bill × (Sum of all Farmers' areas / Total Area)</code>
+                    </li>
+                    <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      <span className="font-medium text-slate-700 min-w-[220px]">New Electricity Cost (Farmers' Share)</span>
+                      <code className="bg-slate-100 text-pink-600 px-2 py-0.5 rounded text-sm">= Farmers' Electricity Share × (1 - Water Reduction Rate / 100)</code>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-3 text-lg border-b border-slate-200 pb-2">2. Profit Calculations</h4>
+                  <ul className="space-y-4 ml-2">
+                    <li className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                      <span className="block font-bold text-emerald-800 mb-2">🧑‍🌾 Individual Farmer's Profit</span>
+                      <code className="bg-white border border-emerald-200 text-emerald-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
+                        = (Fee × Individual Farmer's area) × (Return Rate / 100)
+                      </code>
+                    </li>
+                    <li className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                      <span className="block font-bold text-indigo-800 mb-2">⚙️ Pump Owner's Profit</span>
+                      <code className="bg-white border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-sm block overflow-x-auto">
+                        = {`{ Total Fee from all Farmers × (1 - Return Rate / 100) }`} - New Electricity Cost (Farmers' Share)
+                      </code>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
