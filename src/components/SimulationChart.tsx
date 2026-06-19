@@ -19,7 +19,7 @@ interface SimulationChartProps {
 }
 
 export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
-  const chartData = useMemo(() => {
+  const { chartData, stats } = useMemo(() => {
     const data = [];
     
     const fee = Number(params.fee) || 0;
@@ -106,7 +106,18 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
 
       data.push(point);
     }
-    return data;
+    return {
+      chartData: data,
+      stats: {
+        baselinePumpBusinessProfit,
+        maxReturnRate,
+        maxDiscountAmount,
+        currentDiscountAmount,
+        currentRevenue,
+        currentExpenses,
+        fee
+      }
+    };
   }, [params]);
 
   const currentData = chartData.find(d => d.returnRate === params.returnRate) || chartData[0];
@@ -181,10 +192,10 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
             Current Farmer Discount (at {params.returnRate}%):
           </p>
           <p className="font-bold text-blue-700 text-2xl">
-            {Math.round(currentDiscountAmount).toLocaleString()} <span className="text-sm font-normal">Taka/{params.areaUnit}</span>
+            {Math.round(stats.currentDiscountAmount).toLocaleString()} <span className="text-sm font-normal">Taka/{params.areaUnit}</span>
           </p>
           <p className="text-xs text-slate-500 mt-1">
-            New Fee: <span className="font-semibold text-slate-700">{Math.round(fee - currentDiscountAmount).toLocaleString()}</span> Taka
+            New Fee: <span className="font-semibold text-slate-700">{Math.round(stats.fee - stats.currentDiscountAmount).toLocaleString()}</span> Taka
           </p>
         </div>
         <div className="hidden md:block w-px h-16 bg-blue-200"></div>
@@ -195,11 +206,11 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
           <div className="flex flex-col gap-0.5 text-xs max-w-[200px] mx-auto md:mx-0">
             <div className="flex justify-between">
               <span className="text-slate-500">Revenue:</span>
-              <span className="font-semibold text-slate-700">{Math.round(currentRevenue).toLocaleString()} Taka</span>
+              <span className="font-semibold text-slate-700">{Math.round(stats.currentRevenue).toLocaleString()} Taka</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Expenses:</span>
-              <span className="font-semibold text-slate-700">-{Math.round(currentExpenses).toLocaleString()} Taka</span>
+              <span className="font-semibold text-slate-700">-{Math.round(stats.currentExpenses).toLocaleString()} Taka</span>
             </div>
             <div className="flex justify-between border-t border-blue-200 mt-1 pt-1">
               <span className="font-bold text-slate-700">Net Profit:</span>
@@ -214,10 +225,10 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
             Max Win-Win Discount (Owner keeps baseline profit):
           </p>
           <p className="font-bold text-emerald-700 text-2xl">
-            {Math.round(maxDiscountAmount).toLocaleString()} <span className="text-sm font-normal">Taka/{params.areaUnit}</span>
+            {Math.round(stats.maxDiscountAmount).toLocaleString()} <span className="text-sm font-normal">Taka/{params.areaUnit}</span>
           </p>
           <p className="text-xs text-slate-500 mt-1">
-            Max Return Rate: <span className="font-semibold text-slate-700">{Math.max(0, (Math.floor(maxReturnRate * 10) / 10))}%</span>
+            Max Return Rate: <span className="font-semibold text-slate-700">{Math.max(0, (Math.floor(stats.maxReturnRate * 10) / 10))}%</span>
           </p>
         </div>
       </div>
@@ -279,7 +290,7 @@ export const SimulationChart: React.FC<SimulationChartProps> = ({ params }) => {
               label={{ position: 'top', value: 'Current Setting', fill: '#6366f1', fontSize: 12, fontWeight: 'bold' }} 
             />
             <ReferenceLine 
-              y={baselinePumpBusinessProfit} 
+              y={stats.baselinePumpBusinessProfit} 
               stroke="#ef4444" 
               strokeDasharray="3 3" 
               label={{ position: 'insideTopLeft', value: 'Baseline Owner Profit', fill: '#ef4444', fontSize: 12 }} 
