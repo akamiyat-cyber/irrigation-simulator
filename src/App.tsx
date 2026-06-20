@@ -416,7 +416,16 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
   const r = Number(params.returnRate) || 0;
   const currentPoint = useMemo(() => getPointAt(base, params, r), [base, params, r]);
 
-  const setField = (field: keyof SimulationParams, value: any) => setParams((prev) => ({ ...prev, [field]: value }));
+  const setField = (field: keyof SimulationParams, value: any) => {
+    setParams((prev) => {
+      const next = { ...prev, [field]: value };
+      if (field === 'waterReductionRate') {
+        const tempBase = getBaseCalc(next);
+        next.returnRate = Math.max(0, Math.floor(tempBase.maxReturnRate * 10) / 10);
+      }
+      return next;
+    });
+  };
   const setFarmers = (farmers: Farmer[]) => setParams((prev) => ({ ...prev, farmers }));
   const handleUnitToggle = (newUnit: AreaUnit) => setParams((prev) => convertUnits(prev, newUnit));
 
@@ -658,7 +667,16 @@ interface DetailedInputFormProps {
 }
 
 const DetailedInputForm: React.FC<DetailedInputFormProps> = ({ params, setParams }) => {
-  const setField = (field: keyof SimulationParams, value: any) => setParams((prev) => ({ ...prev, [field]: value }));
+  const setField = (field: keyof SimulationParams, value: any) => {
+    setParams((prev) => {
+      const next = { ...prev, [field]: value };
+      if (field === 'waterReductionRate') {
+        const tempBase = getBaseCalc(next);
+        next.returnRate = Math.max(0, Math.floor(tempBase.maxReturnRate * 10) / 10);
+      }
+      return next;
+    });
+  };
   const setFarmers = (farmers: Farmer[]) => setParams((prev) => ({ ...prev, farmers }));
   const handleUnitToggle = (newUnit: AreaUnit) => setParams((prev) => convertUnits(prev, newUnit));
 
