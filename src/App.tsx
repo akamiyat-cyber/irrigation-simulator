@@ -249,6 +249,7 @@ const translations: Record<Language, Translation> = {
     printPdf: 'Save as PDF / Print',
     beforeWaterSaving: 'Before water saving',
     afterWaterSaving: 'After water saving',
+    newProfitLabel: 'New profit',
   },
   bn: {
     appTitle: '৩F৪D পানি সাশ্রয় ক্যালকুলেটর',
@@ -297,6 +298,7 @@ const translations: Record<Language, Translation> = {
     printPdf: 'পিডিএফ হিসেবে সেভ / প্রিন্ট করুন',
     beforeWaterSaving: 'পানি সাশ্রয়ের আগে',
     afterWaterSaving: 'পানি সাশ্রয়ের পর',
+    newProfitLabel: 'নতুন লাভ',
   },
 };
 
@@ -677,20 +679,33 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
           )}
         </div>
 
-        <div className="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-4">
+          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-indigo-200/60">
             <span className="bg-indigo-100 text-indigo-600 p-2 rounded-lg"><PiggyBank className="w-6 h-6" /></span>
-            <span className="font-bold text-indigo-800">{t.pumpOwnerProfitLabel}</span>
+            <span className="font-bold text-indigo-800 text-lg">{t.pumpOwnerProfitLabel}</span>
           </div>
-          <div className="text-right">
-            <div className="text-2xl font-extrabold text-indigo-700 mb-1">{fmt(currentPoint.pumpBusinessProfit)} {t.taka}</div>
-            <div className="mt-1 text-right">
+          
+          <div className="mb-3">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-indigo-600/80 font-medium">{t.beforeWaterSaving}</span>
+              <span className="font-bold text-indigo-600">{fmt(base.baselinePumpBusinessProfit)} {t.taka}</span>
+            </div>
+          </div>
+          <div className="mb-3">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-indigo-600/80 font-medium">{t.newProfitLabel}</span>
+              <span className="font-bold text-indigo-800">{fmt(currentPoint.pumpBusinessProfit)} {t.taka}</span>
+            </div>
+          </div>
+          <div className="pt-3 border-t border-indigo-200/60">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-bold text-emerald-800">{t.afterWaterSaving}</span>
               {Math.abs(ownerProfitDelta) < 1 ? (
-                <span className="bg-slate-200 text-slate-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+                <span className="bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm border border-slate-300">
                   {t.sameAsBefore}
                 </span>
               ) : (
-                <span className="bg-emerald-100 text-emerald-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+                <span className="bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm border border-emerald-200">
                   {ownerProfitDelta >= 0 ? '+' : ''}{fmt(ownerProfitDelta)} {t.taka} ({t.changedBy})
                 </span>
               )}
