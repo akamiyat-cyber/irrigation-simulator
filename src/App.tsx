@@ -247,6 +247,8 @@ const translations: Record<Language, Translation> = {
     ownerAsFarmer: 'Owner (as a farmer)',
     formulaLabel: 'Calculation Formula',
     printPdf: 'Save as PDF / Print',
+    beforeWaterSaving: 'Before water saving',
+    afterWaterSaving: 'After water saving',
   },
   bn: {
     appTitle: '৩F৪D পানি সাশ্রয় ক্যালকুলেটর',
@@ -293,6 +295,8 @@ const translations: Record<Language, Translation> = {
     ownerAsFarmer: 'মালিক (কৃষক হিসেবে)',
     formulaLabel: 'হিসাবের সূত্র',
     printPdf: 'পিডিএফ হিসেবে সেভ / প্রিন্ট করুন',
+    beforeWaterSaving: 'পানি সাশ্রয়ের আগে',
+    afterWaterSaving: 'পানি সাশ্রয়ের পর',
   },
 };
 
@@ -613,23 +617,26 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
                 <div className="font-bold text-slate-700 mb-2 truncate">{farmer.name} ({farmer.area} {params.areaUnit})</div>
                 <div className="mb-3">
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-slate-500">{t.discount}</span>
-                    <span className="font-bold" style={{ color }}>{fmt(discount)} {t.taka}</span>
+                    <span className="text-slate-500">{t.beforeWaterSaving}</span>
+                    <span className="font-bold text-slate-600">{fmt(base.fee * Number(farmer.area))} {t.taka}</span>
                   </div>
-                  <div className="text-[11px] text-slate-500 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
-                    {fmt(base.fee)} × {farmer.area} × {r}% = {fmt(discount)}
+                  <div className="text-[11px] text-slate-400 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
+                    {fmt(base.fee)} × {farmer.area} = {fmt(base.fee * Number(farmer.area))}
                   </div>
                 </div>
-                <div>
+                <div className="mb-3">
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-slate-500">{t.newFeeLabel}</span>
                     <span className="font-bold text-slate-700">{fmt(newUnitFee * Number(farmer.area))} {t.taka}</span>
                   </div>
-                  <div className="text-[11px] text-slate-500 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
+                  <div className="text-[11px] text-slate-400 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
                     {fmt(newUnitFee)} × {farmer.area} = {fmt(newUnitFee * Number(farmer.area))}
                   </div>
-                  <div className="mt-2 text-right">
-                    <span className="bg-emerald-100 text-emerald-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+                </div>
+                <div className="pt-3 border-t border-slate-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-bold text-emerald-800">{t.afterWaterSaving}</span>
+                    <span className="bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm border border-emerald-200">
                       -{fmt(discount)} {t.taka} ({t.changedBy})
                     </span>
                   </div>
@@ -642,23 +649,26 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
               <div className="font-bold text-slate-700 mb-2">{t.ownerAsFarmer} ({params.pumpOwnerArea} {params.areaUnit})</div>
               <div className="mb-3">
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-slate-500">{t.discount}</span>
-                  <span className="font-bold text-slate-600">{fmt(currentPoint.ownerFarmerProfit)} {t.taka}</span>
+                  <span className="text-slate-500">{t.beforeWaterSaving}</span>
+                  <span className="font-bold text-slate-600">{fmt(base.ownerFee * Number(params.pumpOwnerArea))} {t.taka}</span>
                 </div>
-                <div className="text-[11px] text-slate-500 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
-                  {fmt(base.ownerFee)} × {params.pumpOwnerArea} × {r}% = {fmt(currentPoint.ownerFarmerProfit)}
+                <div className="text-[11px] text-slate-400 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
+                  {fmt(base.ownerFee)} × {params.pumpOwnerArea} = {fmt(base.ownerFee * Number(params.pumpOwnerArea))}
                 </div>
               </div>
-              <div>
+              <div className="mb-3">
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-slate-500">{t.newFeeLabel}</span>
                   <span className="font-bold text-slate-700">{fmt(base.ownerFee * (1 - r / 100) * Number(params.pumpOwnerArea))} {t.taka}</span>
                 </div>
-                <div className="text-[11px] text-slate-500 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
+                <div className="text-[11px] text-slate-400 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
                   {fmt(base.ownerFee * (1 - r / 100))} × {params.pumpOwnerArea} = {fmt(base.ownerFee * (1 - r / 100) * Number(params.pumpOwnerArea))}
                 </div>
-                <div className="mt-2 text-right">
-                  <span className="bg-emerald-100 text-emerald-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+              </div>
+              <div className="pt-3 border-t border-slate-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-bold text-emerald-800">{t.afterWaterSaving}</span>
+                  <span className="bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm border border-emerald-200">
                     -{fmt(currentPoint.ownerFarmerProfit)} {t.taka} ({t.changedBy})
                   </span>
                 </div>
