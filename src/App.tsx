@@ -245,6 +245,7 @@ const translations: Record<Language, Translation> = {
     keptByOwner: 'Kept by pump owner',
     taka: 'Taka',
     ownerAsFarmer: 'Owner (as a farmer)',
+    formulaLabel: 'Calculation Formula',
   },
   bn: {
     appTitle: '৩F৪D পানি সাশ্রয় ক্যালকুলেটর',
@@ -289,6 +290,7 @@ const translations: Record<Language, Translation> = {
     keptByOwner: 'পাম্প মালিকের কাছে রাখা',
     taka: 'টাকা',
     ownerAsFarmer: 'মালিক (কৃষক হিসেবে)',
+    formulaLabel: 'হিসাবের সূত্র',
   },
 };
 
@@ -518,6 +520,18 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
         </h3>
         <div className="text-4xl font-extrabold text-amber-600">
           {fmt(base.savings)} <span className="text-base font-normal text-slate-500">{t.taka} / {t.perSeason}</span>
+        </div>
+        <div className="mt-3 bg-white/50 border border-amber-100 rounded-lg p-3 text-sm text-amber-800">
+          <div className="font-semibold mb-1">{t.formulaLabel}:</div>
+          {params.doesPumpOwnerPayFee ? (
+            <code className="block bg-amber-100/50 px-2 py-1.5 rounded text-amber-900 overflow-x-auto whitespace-nowrap">
+              {fmt(Number(params.electricity) || 0)} × {params.waterReductionRate}% = {fmt(base.savings)}
+            </code>
+          ) : (
+            <code className="block bg-amber-100/50 px-2 py-1.5 rounded text-amber-900 overflow-x-auto whitespace-nowrap">
+              {fmt(Number(params.electricity) || 0)} × ({fmt(base.totalFarmerArea)} / {fmt(base.totalArea)}) × {params.waterReductionRate}% = {fmt(base.savings)}
+            </code>
+          )}
         </div>
       </div>
 
