@@ -628,6 +628,11 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
                   <div className="text-[11px] text-slate-500 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
                     {fmt(newUnitFee)} × {farmer.area} = {fmt(newUnitFee * Number(farmer.area))}
                   </div>
+                  <div className="mt-2 text-right">
+                    <span className="bg-emerald-100 text-emerald-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+                      -{fmt(discount)} {t.taka} ({t.changedBy})
+                    </span>
+                  </div>
                 </div>
               </div>
             );
@@ -652,6 +657,11 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
                 <div className="text-[11px] text-slate-500 bg-white/50 px-2 py-1 rounded font-mono border border-slate-100 overflow-x-auto whitespace-nowrap">
                   {fmt(base.ownerFee * (1 - r / 100))} × {params.pumpOwnerArea} = {fmt(base.ownerFee * (1 - r / 100) * Number(params.pumpOwnerArea))}
                 </div>
+                <div className="mt-2 text-right">
+                  <span className="bg-emerald-100 text-emerald-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+                    -{fmt(currentPoint.ownerFarmerProfit)} {t.taka} ({t.changedBy})
+                  </span>
+                </div>
               </div>
             </div>
           )}
@@ -663,9 +673,17 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
             <span className="font-bold text-indigo-800">{t.pumpOwnerProfitLabel}</span>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-extrabold text-indigo-700">{fmt(currentPoint.pumpBusinessProfit)} {t.taka}</div>
-            <div className="text-xs text-slate-500">
-              {Math.abs(ownerProfitDelta) < 1 ? t.sameAsBefore : `${ownerProfitDelta >= 0 ? '+' : ''}${fmt(ownerProfitDelta)} ${t.taka} (${t.changedBy})`}
+            <div className="text-2xl font-extrabold text-indigo-700 mb-1">{fmt(currentPoint.pumpBusinessProfit)} {t.taka}</div>
+            <div className="mt-1 text-right">
+              {Math.abs(ownerProfitDelta) < 1 ? (
+                <span className="bg-slate-200 text-slate-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+                  {t.sameAsBefore}
+                </span>
+              ) : (
+                <span className="bg-emerald-100 text-emerald-700 font-bold px-2 py-1 rounded-md text-xs inline-block shadow-sm">
+                  {ownerProfitDelta >= 0 ? '+' : ''}{fmt(ownerProfitDelta)} {t.taka} ({t.changedBy})
+                </span>
+              )}
             </div>
           </div>
         </div>
