@@ -532,7 +532,7 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
           <span className="text-3xl font-extrabold text-emerald-600">{r}%</span>
         </div>
         <input
-          type="range" min={0} max={100} step={1}
+          type="range" min={0} max={100} step={0.1}
           value={r}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('returnRate', Number(e.target.value))}
           className="w-full h-3 bg-emerald-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
@@ -728,7 +728,7 @@ const DetailedInputForm: React.FC<DetailedInputFormProps> = ({ params, setParams
             <label className="block text-sm font-medium text-slate-600">Profit return rate to farmers <span className="text-slate-400 font-normal">(%)</span></label>
             <span className="text-sm font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">{params.returnRate}%</span>
           </div>
-          <input type="range" min={0} max={100} step={1} value={params.returnRate}
+          <input type="range" min={0} max={100} step={0.1} value={params.returnRate}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('returnRate', Number(e.target.value))}
             className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mt-2" />
         </div>
@@ -765,7 +765,7 @@ const DetailedChart: React.FC<DetailedChartProps> = ({ params }) => {
     };
   }, [base, r]);
 
-  const currentData: ChartPoint = chartData.find((d) => d.returnRate === Math.round(r)) || chartData[0];
+  const currentPoint = useMemo(() => getPointAt(base, params, r), [base, params, r]);
 
   const handleExportCSV = () => {
     const headers = ['Return Rate (%)'];
@@ -824,7 +824,7 @@ const DetailedChart: React.FC<DetailedChartProps> = ({ params }) => {
           <div className="flex flex-col gap-0.5 text-xs max-w-[200px] mx-auto md:mx-0">
             <div className="flex justify-between"><span className="text-slate-500">Revenue:</span><span className="font-semibold text-slate-700">{Math.round(stats.currentRevenue).toLocaleString()} Taka</span></div>
             <div className="flex justify-between"><span className="text-slate-500">Expenses:</span><span className="font-semibold text-slate-700">-{Math.round(stats.currentExpenses).toLocaleString()} Taka</span></div>
-            <div className="flex justify-between border-t border-blue-200 mt-1 pt-1"><span className="font-bold text-slate-700">Net Profit:</span><span className="font-bold text-indigo-700">{Math.round(currentData.pumpBusinessProfit).toLocaleString()} Taka</span></div>
+            <div className="flex justify-between border-t border-blue-200 mt-1 pt-1"><span className="font-bold text-slate-700">Net Profit:</span><span className="font-bold text-indigo-700">{Math.round(currentPoint.pumpBusinessProfit).toLocaleString()} Taka</span></div>
           </div>
         </div>
         <div className="hidden md:block w-px h-16 bg-blue-200"></div>
@@ -838,7 +838,7 @@ const DetailedChart: React.FC<DetailedChartProps> = ({ params }) => {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 max-h-48 overflow-y-auto pr-2 print:max-h-none print:overflow-visible">
         {params.farmers.map((farmer, idx) => {
           const color = FARMER_COLORS[idx % FARMER_COLORS.length];
-          const profit = currentData[`farmer_${farmer.id}`];
+          const profit = currentPoint.farmerProfits[farmer.id] || 0;
           return (
             <div key={farmer.id} className="bg-slate-50 rounded-xl p-3 border border-slate-200 print:break-inside-avoid" style={{ borderLeftColor: color, borderLeftWidth: '4px' }}>
               <div className="text-xs font-medium text-slate-600 mb-1 truncate">{farmer.name} ({farmer.area}{params.areaUnit})</div>
@@ -849,12 +849,12 @@ const DetailedChart: React.FC<DetailedChartProps> = ({ params }) => {
         {params.doesPumpOwnerPayFee && (
           <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 border-l-4 border-l-slate-400 print:break-inside-avoid">
             <div className="text-xs font-medium text-slate-600 mb-1 truncate">Owner (as Farmer)</div>
-            <div className="text-lg font-bold text-slate-500">{currentData.ownerFarmerProfit.toLocaleString()} <span className="text-xs font-normal text-slate-500">Taka</span></div>
+            <div className="text-lg font-bold text-slate-500">{Math.round(currentPoint.ownerFarmerProfit).toLocaleString()} <span className="text-xs font-normal text-slate-500">Taka</span></div>
           </div>
         )}
         <div className="bg-indigo-50 rounded-xl p-3 border-l-4 border-l-indigo-600 border-indigo-100 col-span-2 md:col-span-1 print:break-inside-avoid">
           <div className="text-xs font-medium text-indigo-800 mb-1">Pump Business</div>
-          <div className="text-lg font-bold text-indigo-600">{currentData.pumpBusinessProfit.toLocaleString()} <span className="text-xs font-normal">Taka</span></div>
+          <div className="text-lg font-bold text-indigo-600">{Math.round(currentPoint.pumpBusinessProfit).toLocaleString()} <span className="text-xs font-normal">Taka</span></div>
         </div>
       </div>
 
