@@ -246,6 +246,7 @@ const translations: Record<Language, Translation> = {
     taka: 'Taka',
     ownerAsFarmer: 'Owner (as a farmer)',
     formulaLabel: 'Calculation Formula',
+    printPdf: 'Save as PDF / Print',
   },
   bn: {
     appTitle: '৩F৪D পানি সাশ্রয় ক্যালকুলেটর',
@@ -291,6 +292,7 @@ const translations: Record<Language, Translation> = {
     taka: 'টাকা',
     ownerAsFarmer: 'মালিক (কৃষক হিসেবে)',
     formulaLabel: 'হিসাবের সূত্র',
+    printPdf: 'পিডিএফ হিসেবে সেভ / প্রিন্ট করুন',
   },
 };
 
@@ -634,6 +636,13 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Print Button */}
+      <div className="flex justify-center print:hidden mt-8 mb-4">
+        <button onClick={() => window.print()} className="flex items-center gap-2 px-6 py-3 bg-slate-800 text-white hover:bg-slate-700 rounded-xl font-bold shadow-sm transition-colors">
+          {t.printPdf}
+        </button>
       </div>
     </div>
   );
