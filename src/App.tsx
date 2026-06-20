@@ -976,7 +976,7 @@ export default function App() {
     waterReductionRate: 15,
     doesPumpOwnerPayFee: false,
     pumpOwnerFee: 1800,
-    returnRate: 5,
+    returnRate: 2.5,
     areaUnit: 'bigha',
     electricity: 15000,
     laborCost: 5000,
