@@ -558,7 +558,7 @@ const SimpleView: React.FC<SimpleViewProps> = ({ params, setParams, t }) => {
             {t.winWinMax}: <span className="font-semibold text-slate-600">{Math.max(0, Math.floor(base.maxReturnRate * 10) / 10)}%</span>
           </span>
           <button
-            onClick={() => setField('returnRate', Math.max(0, Math.floor(base.maxReturnRate)))}
+            onClick={() => setField('returnRate', Math.max(0, Math.floor(base.maxReturnRate * 10) / 10))}
             className="text-xs font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-full transition-colors"
           >
             {t.setToMax}
